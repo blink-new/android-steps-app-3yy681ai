@@ -1,16 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { Settings, Upload, FolderOpen, GitBranch, Paperclip, Sparkles, Mic, ChevronDown, Send, Eye, EyeOff } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select'
-import { Button } from './components/ui/button'
-import { Textarea } from './components/ui/textarea'
-import { Input } from './components/ui/input'
-import { Card } from './components/ui/card'
 
 function App() {
   const [prompt, setPrompt] = useState('')
   const [apiProvider, setApiProvider] = useState('openai')
-  const [model, setModel] = useState('gpt-4o')
-  const [apiKey, setApiKey] = useState('sk-...')
+  const [model, setModel] = useState('grok-2-vision')
+  const [apiKey, setApiKey] = useState('••••••••')
   const [showApiKey, setShowApiKey] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -92,17 +87,19 @@ function App() {
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
               AI Provider
             </label>
-            <Select value={apiProvider} onValueChange={setApiProvider}>
-              <SelectTrigger className="bg-zinc-900/80 border-zinc-700/50 text-white backdrop-blur-sm elevated-card">
-                <SelectValue placeholder="اختر المزود" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-700 backdrop-blur-md">
-                <SelectItem value="openai">OpenAI Like</SelectItem>
-                <SelectItem value="anthropic">Anthropic</SelectItem>
-                <SelectItem value="groq">Groq</SelectItem>
-                <SelectItem value="xai">X.AI / Grok</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="relative">
+              <select 
+                value={apiProvider} 
+                onChange={(e) => setApiProvider(e.target.value)}
+                className="w-full bg-zinc-900/80 border border-zinc-700/50 text-white p-3 rounded-lg backdrop-blur-sm appearance-none pr-10"
+              >
+                <option value="openai">OpenAI Like</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="groq">Groq</option>
+                <option value="xai">X.AI / Grok</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+            </div>
           </div>
 
           {/* Model Selection */}
@@ -111,17 +108,19 @@ function App() {
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               النموذج
             </label>
-            <Select value={model} onValueChange={setModel}>
-              <SelectTrigger className="bg-zinc-900/80 border-zinc-700/50 text-white backdrop-blur-sm elevated-card">
-                <SelectValue placeholder="اختر النموذج" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-700 backdrop-blur-md">
-                <SelectItem value="gpt-4o">x-ai/grok-2-vision-1212</SelectItem>
-                <SelectItem value="gpt-4o-mini">GPT-4O Mini</SelectItem>
-                <SelectItem value="claude-3-opus">Claude 3 Opus</SelectItem>
-                <SelectItem value="grok-2">Grok 2</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="relative">
+              <select 
+                value={model} 
+                onChange={(e) => setModel(e.target.value)}
+                className="w-full bg-zinc-900/80 border border-zinc-700/50 text-white p-3 rounded-lg backdrop-blur-sm appearance-none pr-10"
+              >
+                <option value="grok-2-vision">x-ai/grok-2-vision-1212</option>
+                <option value="gpt-4o-mini">GPT-4O Mini</option>
+                <option value="claude-3-opus">Claude 3 Opus</option>
+                <option value="grok-2">Grok 2</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+            </div>
           </div>
 
           {/* API Key */}
@@ -131,92 +130,85 @@ function App() {
               OpenAI Like API Key:
             </label>
             <div className="relative">
-              <Input
+              <input
                 type={showApiKey ? "text" : "password"}
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="bg-zinc-900/80 border-zinc-700/50 text-white pr-20 backdrop-blur-sm elevated-card"
+                className="w-full bg-zinc-900/80 border border-zinc-700/50 text-white p-3 rounded-lg backdrop-blur-sm pr-20"
                 placeholder="أدخل مفتاح API الخاص بك"
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
-                <Button
-                  size="sm"
-                  variant="ghost"
+                <button
                   onClick={() => setShowApiKey(!showApiKey)}
-                  className="h-6 w-6 p-0 text-zinc-400 hover:text-white"
+                  className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white rounded-md hover:bg-zinc-800/50 transition-colors"
                 >
                   {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-6 w-6 p-0 text-zinc-400 hover:text-white"
-                >
+                </button>
+                <button className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white rounded-md hover:bg-zinc-800/50 transition-colors">
                   <Settings className="h-4 w-4" />
-                </Button>
+                </button>
               </div>
             </div>
-            <div className="h-1 gradient-border rounded-full"></div>
+            <div className="h-1 bg-gradient-to-r from-red-500 to-orange-500 rounded-full"></div>
           </div>
         </div>
 
         {/* Main Chat Input */}
         <div className="flex-1 p-6">
-          <Card className="bg-zinc-900/60 border-zinc-700/50 p-6 backdrop-blur-md elevated-card">
+          <div className="bg-zinc-900/60 border border-zinc-700/50 p-6 rounded-xl backdrop-blur-md shadow-lg">
             <div className="space-y-4">
-              <Textarea
+              <textarea
                 ref={textareaRef}
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="كيف يمكن لـ Bolt مساعدتك اليوم؟"
-                className="bg-transparent border-none text-white placeholder:text-zinc-400 resize-none min-h-[100px] max-h-[200px] text-base leading-relaxed focus:ring-0 focus-visible:ring-0"
+                className="w-full bg-transparent border-none text-white placeholder:text-zinc-400 resize-none min-h-[100px] max-h-[200px] text-base leading-relaxed focus:ring-0 focus:outline-none"
                 disabled={isTyping}
               />
               
               {/* Input Actions */}
               <div className="flex items-center justify-between pt-4 border-t border-zinc-700/50">
                 <div className="flex items-center space-x-4">
-                  <Button size="sm" variant="ghost" className="android-ripple h-9 w-9 p-0 text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-full">
+                  <button className="h-9 w-9 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-full transition-colors">
                     <Paperclip className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" className="android-ripple h-9 w-9 p-0 text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-full">
+                  </button>
+                  <button className="h-9 w-9 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-full transition-colors">
                     <Sparkles className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" className="android-ripple h-9 w-9 p-0 text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-full">
+                  </button>
+                  <button className="h-9 w-9 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-full transition-colors">
                     <Mic className="h-4 w-4" />
-                  </Button>
+                  </button>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Button size="sm" variant="ghost" className="h-9 w-9 p-0 text-zinc-400 hover:text-white">
+                  <button className="h-9 w-9 flex items-center justify-center text-zinc-400 hover:text-white rounded-full transition-colors">
                     <ChevronDown className="h-4 w-4" />
-                  </Button>
-                  <Button 
+                  </button>
+                  <button 
                     onClick={handleSendMessage}
-                    className="bg-blue-600 hover:bg-blue-700 text-white h-9 px-4 android-ripple"
+                    className="bg-blue-600 hover:bg-blue-700 text-white h-9 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     disabled={!prompt.trim() || isTyping}
                   >
                     {isTyping ? (
-                      <div className="flex items-center gap-2">
+                      <>
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                         جاري الإرسال
-                      </div>
+                      </>
                     ) : (
                       <Send className="h-4 w-4" />
                     )}
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* Quick Actions */}
         <div className="p-6 space-y-3">
           {quickActions.map((action, index) => (
-            <Button
+            <button
               key={index}
-              variant="outline"
-              className="w-full h-auto p-5 justify-start bg-zinc-900/60 border-zinc-700/50 hover:bg-zinc-800/60 hover:border-zinc-600/50 android-ripple backdrop-blur-md elevated-card group"
+              className="w-full p-5 flex items-center justify-start bg-zinc-900/60 border border-zinc-700/50 hover:bg-zinc-800/60 hover:border-zinc-600/50 rounded-xl backdrop-blur-md shadow-lg transition-all group"
             >
               <div className={`h-10 w-10 rounded-full bg-gradient-to-r ${action.color} flex items-center justify-center mr-4 group-hover:scale-110 transition-transform`}>
                 <action.icon className="h-5 w-5 text-white" />
@@ -225,7 +217,7 @@ function App() {
                 <div className="font-medium text-white text-right">{action.label}</div>
                 <div className="text-sm text-zinc-400 text-right">{action.description}</div>
               </div>
-            </Button>
+            </button>
           ))}
         </div>
 
